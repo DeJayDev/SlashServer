@@ -1,14 +1,26 @@
-SlashServer
+SlashServer-Velocity
 ===========
-[![Build Status](https://ci.noxal.net/job/SlashServer/badge/icon)](https://ci.noxal.net/job/SlashServer/)
-![Velocity v1.0](https://img.shields.io/badge/Velocity-v1.0-green.svg)
-![Java JDK v1.8](https://img.shields.io/badge/Java%20JDK-v1.8-blue.svg)
+![Velocity 2.0.0-SNAPSHOT](https://img.shields.io/badge/Velocity%20-2.0.0--SNAPSHOT-blue.svg)
+![Java 11](https://img.shields.io/badge/Java%20-11-blue.svg)
 
-This plugin adds /server command aliases for velocity, for example  
-/lobby is aliased to /server lobby  
-/survival is aliased to /server survival  
+A fork of Willsr71/SlashServer, this plugin adds /server command aliases for Velocity 2.0.0-SNAPSHOT servers.
+
+Running BungeeCord/Waterfall? Check out DeJayDev/SlashServer-Bungee.
+
+For example:
+* /server lobby can now be used as /lobby
+* /server survival can now be used as /survival
+
 Server commands require the permission nodes of server.\<name\>
 
-Note: Server commands and permission nodes are the lowercase form of the server name
+**Note: Server commands and permission nodes are the lowercase form of the server name**
 
-/ssreload reloads the plugin and required the permission node slashserver.reload
+`/reloadss` reloads the plugin and requires the permission node `slashserver.reload`
+
+##### "Why fork"?
+
+Sometimes users want certain features these plugins don't support, or these plugins' APIs have long
+progressed past the way these plugins implement them. SlashServer-Bungee and SlashServer-Velocity
+will try their hardests to stay up to date for their respective platforms.
+
+Feel free to open an issue for feature requests or to notify me of any API changes.

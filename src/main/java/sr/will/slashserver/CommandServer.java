@@ -1,44 +1,40 @@
 package sr.will.slashserver;
 
-import com.velocitypowered.api.command.Command;
-import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.ServerConnection;
+import com.velocitypowered.api.command.SimpleCommand;
+import com.velocitypowered.api.proxy.connection.Player;
+import com.velocitypowered.api.proxy.connection.ServerConnection;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
-import net.kyori.text.TextComponent;
-import net.kyori.text.format.TextColor;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.optional.qual.MaybePresent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
-import java.util.Optional;
+public class CommandServer implements SimpleCommand {
 
-public class CommandServer implements Command {
-    private RegisteredServer server;
+    private final RegisteredServer server;
 
     public CommandServer(RegisteredServer server) {
         this.server = server;
     }
 
     @Override
-    public void execute(@MaybePresent CommandSource cs, @NonNull @MaybePresent String[] args) {
-        if (!(cs instanceof Player)) {
-            cs.sendMessage(TextComponent.of("Player only command!", TextColor.RED));
+    public void execute(SimpleCommand.Invocation invocation) {
+        if (!(invocation.source() instanceof Player)) {
+            invocation.source().sendMessage(Component.text("Player only command!", NamedTextColor.RED));
             return;
         }
 
-        Player player = (Player) cs;
-        Optional<ServerConnection> connection = player.getCurrentServer();
-        if (connection.isPresent() && connection.get().getServer() == server) {
-            cs.sendMessage(TextComponent.of("You are already connected to this server!", TextColor.RED));
+        Player player = (Player) invocation.source();
+        ServerConnection connection = player.connectedServer();
+        if (connection.serverInfo().name() == server.serverInfo().name()) {
+            player.sendMessage(Component.text("You are already connected to this server!", NamedTextColor.RED));
             return;
         }
 
         player.createConnectionRequest(server).fireAndForget();
-        cs.sendMessage(TextComponent.of("You have been sent to " + server.getServerInfo().getName(), TextColor.GREEN));
+        player.sendMessage(Component.text("You have been sent to " + server.serverInfo().name(), NamedTextColor.GREEN));
     }
 
     @Override
-    public boolean hasPermission(@MaybePresent CommandSource cs, @NonNull @MaybePresent String[] args) {
-        return cs.hasPermission("slashserver." + server.getServerInfo().getName().toLowerCase());
+    public boolean hasPermission(Invocation invocation) {
+        return invocation.source().hasPermission("slashserver." + server.serverInfo().name().toLowerCase());
     }
 }
