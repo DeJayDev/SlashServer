@@ -2,7 +2,7 @@ package sr.will.slashserver;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.lifecycle.ProxyInitializeEvent;
+import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -22,18 +22,18 @@ public class SlashServer {
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        proxy.commandManager().register("ssreload", new CommandReload(this));
+        proxy.getCommandManager().register("ssreload", new CommandReload(this));
 
         reload();
     }
 
     public void reload() {
-        registeredCommands.forEach(name -> proxy.commandManager().unregister(name));
+        registeredCommands.forEach(name -> proxy.getCommandManager().unregister(name));
         registeredCommands.clear();
 
-        for (RegisteredServer server : proxy.registeredServers()) {
-            String name = server.serverInfo().name().toLowerCase();
-            proxy.commandManager().register(name, new CommandServer(server));
+        for (RegisteredServer server : proxy.getAllServers()) {
+            String name = server.getServerInfo().getName().toLowerCase();
+            proxy.getCommandManager().register(name, new CommandServer(server));
             registeredCommands.add(name);
         }
     }
